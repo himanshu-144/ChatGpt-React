@@ -8,8 +8,8 @@ import { useState } from 'react';
 import { Configuration, OpenAIApi } from "openai";
 function App() {
   const configuration = new Configuration({
-  
-    apiKey:"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" ,
+    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+    
  });
   const openai = new OpenAIApi(configuration);
   const[option, setOption] = useState({});

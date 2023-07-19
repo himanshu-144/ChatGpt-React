@@ -1,23 +1,45 @@
-import logo from './logo.svg';
+
 import './App.css';
 
+import OptionSelection from './components/OptionSelection';
+import dataAi from "./AiOptions/DataAi"
+import Translation from './components/Translation';
+import { useState } from 'react';
+import { Configuration, OpenAIApi } from "openai";
 function App() {
+  const configuration = new Configuration({
+  
+    apiKey:"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" ,
+ });
+  const openai = new OpenAIApi(configuration);
+  const[option, setOption] = useState({});
+  const[input, setInput] = useState("");
+  const[result, setResult] = useState("");
+
+  const selectOption=(optionData)=>{
+    setOption(optionData);
+  };
+  const doStuff =async()=>{
+    
+    let object ={...option, prompt :input}
+    const response = await openai.createCompletion(object);
+    setResult(response.data.choices[0].text);
+  };
+
+ 
+  console.log(Object.values(option).length);
+  console.log(dataAi);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {
+        Object.values(option).length === 0 ? (
+          <OptionSelection dataAi={dataAi} selectOption={selectOption} />
+        ) : (
+          <Translation doStuff={doStuff} setInput={setInput} result={result}/>
+        )
+      }
+      
+     
     </div>
   );
 }
